@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
 		.stream()//this will form stream of single user object
 		.map((user)->{
 			//call rating api
-			Rating[] ratingofusers = restTemplate.getForObject("http://localhost:8085/rating/getByUserId/" + user.getId(),
+			Rating[] ratingofusers = restTemplate.getForObject("http://RATING-MICROSERVICE/rating/getByUserId/" + user.getId(),
 					Rating[].class);
 			//CONVERT to list (from array to list)
 			List<Rating> ratingList = Arrays.stream(ratingofusers).toList();
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
 				
 				//call hotel api
 				ResponseEntity<Hotel> response = restTemplate
-						.getForEntity("http://localhost:8081/hotels/gethotel/" + rating.getHotelId(), Hotel.class);
+						.getForEntity("http://HOTEL-MICROSERVICE/hotels/gethotel/" + rating.getHotelId(), Hotel.class);
 				Hotel hotel = response.getBody();
 				// sethotel in rating list
 				rating.setHotel(hotel);
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
 		 * */
 		User user = userrepo.findById(userId).orElseThrow(() -> new GlobalException("User Not Found on Server!!!"));
 
-		Rating[] ratingofusers = restTemplate.getForObject("http://localhost:8085/rating/getByUserId/" + userId,
+		Rating[] ratingofusers = restTemplate.getForObject("http://RATING-MICROSERVICE/rating/getByUserId/" + userId,
 				Rating[].class);
 
 		log.info("RestTemplate Object " + ratingofusers);
@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService {
 		List<Rating> ratinghotelList = ratings.stream().map((rating) -> {
 			// call hotel api
 			ResponseEntity<Hotel> response = restTemplate
-					.getForEntity("http://localhost:8081/hotels/gethotel/" + rating.getHotelId(), Hotel.class);
+					.getForEntity("http://HOTEL-MICROSERVICE/hotels/gethotel/" + rating.getHotelId(), Hotel.class);
 			Hotel hotel = response.getBody();
 			// sethotel in rating list
 			rating.setHotel(hotel);
